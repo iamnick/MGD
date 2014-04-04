@@ -36,19 +36,30 @@
     CCNodeColor *background = [CCNodeColor nodeWithColor:[CCColor colorWithRed:0.69f green:0.88f blue:1.0f alpha:1.0f]];
     [self addChild:background];
     
+    // Physics
+    _physicsWorld = [CCPhysicsNode node];
+    _physicsWorld.gravity = ccp(0,0);
+    _physicsWorld.debugDraw = NO;
+    _physicsWorld.collisionDelegate = self;
+    [self addChild:_physicsWorld];
+    
     // Create Ground (forestgreen - #228B22)
     _ground = [CCNodeColor nodeWithColor:[CCColor colorWithRed:0.13f green:0.54f blue:0.13f alpha:1.0f]];
 	_ground.contentSize = CGSizeMake(self.contentSize.width, self.contentSize.height*0.05f);
     _ground.position = ccp(0.0f, 0.0f);
-    [self addChild:_ground];
+    _ground.physicsBody = [CCPhysicsBody bodyWithRect:(CGRect){CGPointZero, _ground.contentSize} cornerRadius:0];
+    _ground.physicsBody.collisionType = @"groundCollision";
+    _ground.physicsBody.type = CCPhysicsBodyTypeStatic;
+    [_physicsWorld addChild:_ground];
     
-	// Boy Sprite
+	// Create Boy Sprite
     _boySprite = [CCSprite spriteWithImageNamed:@"boy.png"];
     _boySprite.scaleX = .08;
     _boySprite.scaleY = .08;
-    //_boySprite.positionType = CCPositionTypeNormalized;
-    _boySprite.position = ccp(self.contentSize.width * 0.4f, self.contentSize.height * 0.4f);
-    [self addChild:_boySprite];
+	_boySprite.position = ccp(self.contentSize.width * 0.4f, self.contentSize.height * 0.4f);
+    _boySprite.physicsBody = [CCPhysicsBody bodyWithRect:(CGRect){CGPointZero, _boySprite.contentSize} cornerRadius:0];
+    _boySprite.physicsBody.collisionType = @"boyCollision";
+    [_physicsWorld addChild:_boySprite];
     
     // Red Balloon Sprite
     _redBalloonSprite = [CCSprite spriteWithImageNamed:@"balloon_red.png"];
@@ -64,11 +75,14 @@
     _blueBalloonSprite.scaleY = .7;
     //_blueBalloonSprite.physicsBody = [CCPhysicsBody bodyWithCircleOfRadius:_blueBalloonSprite.contentSize andCenter:(0,0)];
     [self addChild:_blueBalloonSprite];
-    
+   	
     // done
 	return self;
 }
 
+/*
+ * 	Handles All Taps On Screen
+ */
 -(void) touchBegan:(UITouch *)touch withEvent:(UIEvent *)event {
     CGPoint touchLoc = [touch locationInNode:self];
     
@@ -87,9 +101,24 @@
     
     // Boy - Falls to Ground (No Collision Yet)
     if (CGRectContainsPoint(_boySprite.boundingBox, touchLoc)) {
-        CCActionMoveTo *boyFalling = [CCActionMoveTo actionWithDuration:2.0f position:CGPointMake(_boySprite.position.x, ((self.contentSize.height*0.05f) + _boySprite.boundingBox.size.height/2 ))];
-    	[_boySprite runAction:boyFalling];
+    	// Without Collision Movement
+        //CCActionMoveTo *boyFalling = [CCActionMoveTo actionWithDuration:2.0f position:CGPointMake(_boySprite.position.x, ((self.contentSize.height*0.05f) + _boySprite.boundingBox.size.height/2 ))];
+        
+        // With Collision Movement
+    	CCActionMoveTo *boyFalling = [CCActionMoveTo actionWithDuration:2.0f position:CGPointMake(_boySprite.position.x, (self.contentSize.height*0.05f ))];
+        [_boySprite runAction:boyFalling];
     }
+}
+
+/*
+ * Handles Collision of Boy Sprite & Ground 
+ */
+-(BOOL)ccPhysicsCollisionBegin:(CCPhysicsCollisionPair *)pair groundCollision:(CCNode *)ground boyCollision:(CCNode *)boy
+{
+	[boy stopAllActions];
+    [ground stopAllActions];
+    CCLOG(@"Collision between player and ground detected.");
+    return YES;
 }
 
 @end
