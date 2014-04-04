@@ -14,6 +14,8 @@
     CCSprite *_boySprite;
 	CCSprite *_redBalloonSprite;
     CCSprite *_blueBalloonSprite;
+    CCSprite *_treeSpriteA;
+    CCSprite *_treeSpriteB;
     CCNodeColor *_ground;
     CCPhysicsNode *_physicsWorld;
 }
@@ -34,6 +36,7 @@
     
     // Create a colored background (lightskyblue1 - #B0E2FF)
     CCNodeColor *background = [CCNodeColor nodeWithColor:[CCColor colorWithRed:0.69f green:0.88f blue:1.0f alpha:1.0f]];
+    background.zOrder = -1;
     [self addChild:background];
     
     // Physics
@@ -43,7 +46,7 @@
     _physicsWorld.collisionDelegate = self;
     [self addChild:_physicsWorld];
     
-    // Create Ground (forestgreen - #228B22)
+    // Create Rectangle to Represent the Ground (forestgreen - #228B22)
     _ground = [CCNodeColor nodeWithColor:[CCColor colorWithRed:0.13f green:0.54f blue:0.13f alpha:1.0f]];
 	_ground.contentSize = CGSizeMake(self.contentSize.width, self.contentSize.height*0.05f);
     _ground.position = ccp(0.0f, 0.0f);
@@ -52,10 +55,25 @@
     _ground.physicsBody.type = CCPhysicsBodyTypeStatic;
     [_physicsWorld addChild:_ground];
     
+    // Create Tree Sprites
+    _treeSpriteA = [CCSprite spriteWithImageNamed:@"tree1.png"];
+    _treeSpriteA.scaleX = 0.55f;
+    _treeSpriteA.scaleY = 0.55f;
+    _treeSpriteA.position = ccp(self.contentSize.width * 0.4f, self.contentSize.height * 0.05f + _treeSpriteA.boundingBox.size.height/2);
+    _treeSpriteA.zOrder = -1;
+    [self addChild:_treeSpriteA];
+    
+    _treeSpriteB = [CCSprite spriteWithImageNamed:@"tree2.png"];
+    _treeSpriteB.scaleX = 0.55f;
+    _treeSpriteB.scaleY = 0.55f;
+    _treeSpriteB.position = ccp(self.contentSize.width * 0.8f, self.contentSize.height * 0.05f + _treeSpriteB.boundingBox.size.height/2);
+    _treeSpriteB.zOrder = -1;
+    [self addChild:_treeSpriteB];
+    
 	// Create Boy Sprite
     _boySprite = [CCSprite spriteWithImageNamed:@"boy.png"];
-    _boySprite.scaleX = .08;
-    _boySprite.scaleY = .08;
+    _boySprite.scaleX = 0.1f;
+    _boySprite.scaleY = 0.1f;
 	_boySprite.position = ccp(self.contentSize.width * 0.4f, self.contentSize.height * 0.4f);
     _boySprite.physicsBody = [CCPhysicsBody bodyWithRect:(CGRect){CGPointZero, _boySprite.contentSize} cornerRadius:0];
     _boySprite.physicsBody.collisionType = @"boyCollision";
@@ -64,15 +82,15 @@
     // Red Balloon Sprite
     _redBalloonSprite = [CCSprite spriteWithImageNamed:@"balloon_red.png"];
     _redBalloonSprite.position = ccp(self.contentSize.width*0.4f, self.contentSize.height*0.7);
-    _redBalloonSprite.scaleX = .7;
-    _redBalloonSprite.scaleY = .7;
+    _redBalloonSprite.scaleX = 0.7f;
+    _redBalloonSprite.scaleY = 0.7f;
     [self addChild:_redBalloonSprite];
     
     // Blue Balloon Sprite
     _blueBalloonSprite = [CCSprite spriteWithImageNamed:@"balloon_blue.png"];
     _blueBalloonSprite.position = ccp(self.contentSize.width*0.6f, self.contentSize.width*0.7f);
-    _blueBalloonSprite.scaleX = .7;
-    _blueBalloonSprite.scaleY = .7;
+    _blueBalloonSprite.scaleX = 0.7f;
+    _blueBalloonSprite.scaleY = 0.7f;
     //_blueBalloonSprite.physicsBody = [CCPhysicsBody bodyWithCircleOfRadius:_blueBalloonSprite.contentSize andCenter:(0,0)];
     [self addChild:_blueBalloonSprite];
    	
@@ -116,8 +134,7 @@
 -(BOOL)ccPhysicsCollisionBegin:(CCPhysicsCollisionPair *)pair groundCollision:(CCNode *)ground boyCollision:(CCNode *)boy
 {
 	[boy stopAllActions];
-    [ground stopAllActions];
-    CCLOG(@"Collision between player and ground detected.");
+    CCLOG(@"Collision between boy and ground detected.");
     return YES;
 }
 
