@@ -117,7 +117,7 @@
     	[[OALSimpleAudio sharedInstance] playEffect:@"wrong_answer.mp3"];
     }
     
-    // Boy - Falls to Ground (No Collision Yet)
+    // Boy - Falls to Ground
     if (CGRectContainsPoint(_boySprite.boundingBox, touchLoc)) {
     	// Without Collision Movement
         //CCActionMoveTo *boyFalling = [CCActionMoveTo actionWithDuration:2.0f position:CGPointMake(_boySprite.position.x, ((self.contentSize.height*0.05f) + _boySprite.boundingBox.size.height/2 ))];

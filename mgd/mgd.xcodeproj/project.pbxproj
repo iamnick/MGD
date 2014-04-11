@@ -217,7 +217,6 @@
 		82D035B018EDF15000F84130 /* balloon_purple.png in Resources */ = {isa = PBXBuildFile; fileRef = 82D035A918EDF15000F84130 /* balloon_purple.png */; };
 		82D035B118EDF15000F84130 /* balloon_red.png in Resources */ = {isa = PBXBuildFile; fileRef = 82D035AA18EDF15000F84130 /* balloon_red.png */; };
 		82D035B218EDF15000F84130 /* balloon_yellow.png in Resources */ = {isa = PBXBuildFile; fileRef = 82D035AB18EDF15000F84130 /* balloon_yellow.png */; };
-		82D035B318EDF15000F84130 /* boy.png in Resources */ = {isa = PBXBuildFile; fileRef = 82D035AC18EDF15000F84130 /* boy.png */; };
 		82D035B618EE028F00F84130 /* balloon_pop.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 82D035B418EE028F00F84130 /* balloon_pop.mp3 */; };
 		82D035B718EE028F00F84130 /* wrong_answer.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 82D035B518EE028F00F84130 /* wrong_answer.mp3 */; };
 		82D035BF18EE49F000F84130 /* cloud1.png in Resources */ = {isa = PBXBuildFile; fileRef = 82D035B818EE49F000F84130 /* cloud1.png */; };
@@ -225,8 +224,13 @@
 		82D035C118EE49F000F84130 /* cloud3.png in Resources */ = {isa = PBXBuildFile; fileRef = 82D035BA18EE49F000F84130 /* cloud3.png */; };
 		82D035C218EE49F000F84130 /* cloud4.png in Resources */ = {isa = PBXBuildFile; fileRef = 82D035BB18EE49F000F84130 /* cloud4.png */; };
 		82D035C318EE49F000F84130 /* cloud5.png in Resources */ = {isa = PBXBuildFile; fileRef = 82D035BC18EE49F000F84130 /* cloud5.png */; };
-		82D035C418EE49F000F84130 /* tree1.png in Resources */ = {isa = PBXBuildFile; fileRef = 82D035BD18EE49F000F84130 /* tree1.png */; };
-		82D035C518EE49F100F84130 /* tree2.png in Resources */ = {isa = PBXBuildFile; fileRef = 82D035BE18EE49F000F84130 /* tree2.png */; };
+		82D035C818F373D500F84130 /* GameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 82D035C718F373D500F84130 /* GameScene.m */; };
+		82D035CA18F37FE900F84130 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = 82D035C918F37FE900F84130 /* background.png */; };
+		82D035CC18F502A100F84130 /* boy.png in Resources */ = {isa = PBXBuildFile; fileRef = 82D035CB18F502A100F84130 /* boy.png */; };
+		82D035CF18F71D1A00F84130 /* MathProblem.m in Sources */ = {isa = PBXBuildFile; fileRef = 82D035CE18F71D1A00F84130 /* MathProblem.m */; };
+		82D035D218F74D4900F84130 /* bird1.png in Resources */ = {isa = PBXBuildFile; fileRef = 82D035D018F74D4900F84130 /* bird1.png */; };
+		82D035D318F74D4900F84130 /* bird2.png in Resources */ = {isa = PBXBuildFile; fileRef = 82D035D118F74D4900F84130 /* bird2.png */; };
+		82D035D518F76D7100F84130 /* ground.png in Resources */ = {isa = PBXBuildFile; fileRef = 82D035D418F76D7100F84130 /* ground.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -672,7 +676,6 @@
 		82D035A918EDF15000F84130 /* balloon_purple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = balloon_purple.png; sourceTree = "<group>"; };
 		82D035AA18EDF15000F84130 /* balloon_red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = balloon_red.png; sourceTree = "<group>"; };
 		82D035AB18EDF15000F84130 /* balloon_yellow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = balloon_yellow.png; sourceTree = "<group>"; };
-		82D035AC18EDF15000F84130 /* boy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = boy.png; sourceTree = "<group>"; };
 		82D035B418EE028F00F84130 /* balloon_pop.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = balloon_pop.mp3; sourceTree = "<group>"; };
 		82D035B518EE028F00F84130 /* wrong_answer.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = wrong_answer.mp3; sourceTree = "<group>"; };
 		82D035B818EE49F000F84130 /* cloud1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cloud1.png; sourceTree = "<group>"; };
@@ -680,8 +683,15 @@
 		82D035BA18EE49F000F84130 /* cloud3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cloud3.png; sourceTree = "<group>"; };
 		82D035BB18EE49F000F84130 /* cloud4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cloud4.png; sourceTree = "<group>"; };
 		82D035BC18EE49F000F84130 /* cloud5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cloud5.png; sourceTree = "<group>"; };
-		82D035BD18EE49F000F84130 /* tree1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tree1.png; sourceTree = "<group>"; };
-		82D035BE18EE49F000F84130 /* tree2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tree2.png; sourceTree = "<group>"; };
+		82D035C618F373D500F84130 /* GameScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameScene.h; sourceTree = "<group>"; };
+		82D035C718F373D500F84130 /* GameScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameScene.m; sourceTree = "<group>"; };
+		82D035C918F37FE900F84130 /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
+		82D035CB18F502A100F84130 /* boy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = boy.png; sourceTree = "<group>"; };
+		82D035CD18F71D1A00F84130 /* MathProblem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MathProblem.h; sourceTree = "<group>"; };
+		82D035CE18F71D1A00F84130 /* MathProblem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MathProblem.m; sourceTree = "<group>"; };
+		82D035D018F74D4900F84130 /* bird1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bird1.png; sourceTree = "<group>"; };
+		82D035D118F74D4900F84130 /* bird2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bird2.png; sourceTree = "<group>"; };
+		82D035D418F76D7100F84130 /* ground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ground.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -753,13 +763,16 @@
 		82D0330318EDEB8900F84130 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				82D035D418F76D7100F84130 /* ground.png */,
+				82D035D018F74D4900F84130 /* bird1.png */,
+				82D035D118F74D4900F84130 /* bird2.png */,
+				82D035CB18F502A100F84130 /* boy.png */,
+				82D035C918F37FE900F84130 /* background.png */,
 				82D035B818EE49F000F84130 /* cloud1.png */,
 				82D035B918EE49F000F84130 /* cloud2.png */,
 				82D035BA18EE49F000F84130 /* cloud3.png */,
 				82D035BB18EE49F000F84130 /* cloud4.png */,
 				82D035BC18EE49F000F84130 /* cloud5.png */,
-				82D035BD18EE49F000F84130 /* tree1.png */,
-				82D035BE18EE49F000F84130 /* tree2.png */,
 				82D035B418EE028F00F84130 /* balloon_pop.mp3 */,
 				82D035B518EE028F00F84130 /* wrong_answer.mp3 */,
 				82D035A618EDF15000F84130 /* balloon_blue.png */,
@@ -768,7 +781,6 @@
 				82D035A918EDF15000F84130 /* balloon_purple.png */,
 				82D035AA18EDF15000F84130 /* balloon_red.png */,
 				82D035AB18EDF15000F84130 /* balloon_yellow.png */,
-				82D035AC18EDF15000F84130 /* boy.png */,
 				82D0330418EDEB8900F84130 /* Default.png */,
 				82D0330618EDEB8900F84130 /* Default@2x.png */,
 				82D0330818EDEB8900F84130 /* Default-568h@2x.png */,
@@ -1589,6 +1601,10 @@
 				82D0359318EDEB8C00F84130 /* AppDelegate.m */,
 				82D035A318EDEC3200F84130 /* TestScene.h */,
 				82D035A418EDEC3200F84130 /* TestScene.m */,
+				82D035C618F373D500F84130 /* GameScene.h */,
+				82D035C718F373D500F84130 /* GameScene.m */,
+				82D035CD18F71D1A00F84130 /* MathProblem.h */,
+				82D035CE18F71D1A00F84130 /* MathProblem.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -1662,12 +1678,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				82D0330718EDEB8900F84130 /* Default@2x.png in Resources */,
+				82D035CA18F37FE900F84130 /* background.png in Resources */,
 				82D035B718EE028F00F84130 /* wrong_answer.mp3 in Resources */,
 				82D035B218EDF15000F84130 /* balloon_yellow.png in Resources */,
 				82D035BF18EE49F000F84130 /* cloud1.png in Resources */,
+				82D035D318F74D4900F84130 /* bird2.png in Resources */,
 				82D035B618EE028F00F84130 /* balloon_pop.mp3 in Resources */,
 				82D0331A18EDEB8900F84130 /* Icon-120.png in Resources */,
-				82D035C518EE49F100F84130 /* tree2.png in Resources */,
 				82D035AD18EDF15000F84130 /* balloon_blue.png in Resources */,
 				82D0351E18EDEB8B00F84130 /* LICENSE_CCBReader.txt in Resources */,
 				82D035C018EE49F000F84130 /* cloud2.png in Resources */,
@@ -1685,15 +1702,16 @@
 				82D0332018EDEB8900F84130 /* Icon-Small.png in Resources */,
 				82D0331E18EDEB8900F84130 /* Icon-Small-50.png in Resources */,
 				82D0350718EDEB8B00F84130 /* LICENSE_Kazmath.txt in Resources */,
-				82D035C418EE49F000F84130 /* tree1.png in Resources */,
 				82D0331218EDEB8900F84130 /* Icon-72.png in Resources */,
 				82D035B118EDF15000F84130 /* balloon_red.png in Resources */,
-				82D035B318EDF15000F84130 /* boy.png in Resources */,
 				82D0346018EDEB8B00F84130 /* LICENSE_cocos2d.txt in Resources */,
 				82D0330918EDEB8900F84130 /* Default-568h@2x.png in Resources */,
 				82D035C218EE49F000F84130 /* cloud4.png in Resources */,
+				82D035D518F76D7100F84130 /* ground.png in Resources */,
 				82D035B018EDF15000F84130 /* balloon_purple.png in Resources */,
+				82D035D218F74D4900F84130 /* bird1.png in Resources */,
 				82D0332918EDEB8900F84130 /* iTunesArtwork in Resources */,
+				82D035CC18F502A100F84130 /* boy.png in Resources */,
 				82D0332418EDEB8900F84130 /* Icon-Spotlight-iOS7.png in Resources */,
 				82D0331818EDEB8900F84130 /* Icon-76@2x.png in Resources */,
 				82D0358C18EDEB8C00F84130 /* LICENSE_Chipmunk.txt in Resources */,
@@ -1754,6 +1772,7 @@
 				82D0338E18EDEB8A00F84130 /* CCNode.m in Sources */,
 				82D0337918EDEB8A00F84130 /* CCLabelBMFont.m in Sources */,
 				82D0333718EDEB8900F84130 /* CCActionEase.m in Sources */,
+				82D035CF18F71D1A00F84130 /* MathProblem.m in Sources */,
 				82D0334618EDEB8900F84130 /* CCActionTween.m in Sources */,
 				82D034B418EDEB8B00F84130 /* NSMutableDictionary+WeakReferences.m in Sources */,
 				82D0339118EDEB8A00F84130 /* CCNode+Debug.m in Sources */,
@@ -1781,6 +1800,7 @@
 				82D0334318EDEB8900F84130 /* CCActionProgressTimer.m in Sources */,
 				82D034F918EDEB8B00F84130 /* plane.c in Sources */,
 				82D0347C18EDEB8B00F84130 /* OALSimpleAudio.m in Sources */,
+				82D035C818F373D500F84130 /* GameScene.m in Sources */,
 				82D0336E18EDEB8A00F84130 /* CCGLProgram.m in Sources */,
 				82D0359018EDEB8C00F84130 /* main.m in Sources */,
 				82D034A318EDEB8B00F84130 /* OALAudioSession.m in Sources */,
