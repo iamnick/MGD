@@ -1,8 +1,8 @@
 //
-//  GameScene.h
+//  PauseScene.h
 //  mgd
 //
-//  Created by Nick Stelzer on 4/7/14.
+//  Created by Nick Stelzer on 4/16/14.
 //  Copyright 2014 Nick Stelzer. All rights reserved.
 //
 
@@ -10,11 +10,11 @@
 #import "cocos2d.h"
 #import "cocos2d-ui.h"
 
-@interface GameScene : CCScene <CCPhysicsCollisionDelegate> {
+@interface PauseScene : CCScene {
     
 }
 
-+ (GameScene *)scene;
++ (PauseScene *)scene;
 - (id)init;
 
 @end

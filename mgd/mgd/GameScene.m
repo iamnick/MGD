@@ -8,16 +8,25 @@
 
 #import "GameScene.h"
 #import "MathProblem.h"
+#import "CCAnimation.h"
+#import "TimerNode.h"
+#import "PostGameNode.h"
+#import "PauseScene.h"
 
 @implementation GameScene
 {
 	// Screen Width/Height
-    int _screenX, _screenY;
+    CGSize _windowSize;
+    float _textScaleFactor;
     
-	// Sprites that will need to be accessed later
+	// Nodes that will need to be accessed later
     CCSprite *_boySprite;
     CCLabelTTF *_problemLabel;
+    TimerNode *_timerNode;
 	NSMutableArray *_balloons, *_strings, *_problems, *_answers;
+    CCNodeColor *_pauseOverlay;
+    CCButton *_resumeButton;
+    CCSprite *_pauseButton;
     
     // Physics World
     CCPhysicsNode *_physicsWorld;
@@ -33,6 +42,7 @@
 	#define Z_STRING 3
     #define Z_PHYSICS 4
     #define Z_BALLOON 5
+    #define Z_UI 10
 }
 
 + (GameScene *)scene
@@ -52,17 +62,34 @@
     _balloons = [[NSMutableArray alloc] init];
     _strings = [[NSMutableArray alloc] init];
     _problemsAnswered = 0;
-    _screenX = self.contentSize.width;
-    _screenY = self.contentSize.height;
+    _textScaleFactor = [[CCDirector sharedDirector] contentScaleFactor];
+    _windowSize = [[CCDirector sharedDirector] viewSize];
     
     // Set Touch Enabled
     self.userInteractionEnabled = YES;
     
+    // Load Spritesheets
+    CCFileUtils *sharedFileUtils = [CCFileUtils sharedFileUtils];
+    [sharedFileUtils setiPadSuffix:@"-hd"];
+    [sharedFileUtils setiPhoneRetinaDisplaySuffix:@""];
+    
+    CCSpriteBatchNode *backgroundBgNode;
+    backgroundBgNode = [CCSpriteBatchNode batchNodeWithFile:@"background.pvr.ccz"];
+    [self addChild:backgroundBgNode];
+    [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"background.plist"];
+    
+    CCSpriteBatchNode *spritesBgNode;
+    spritesBgNode = [CCSpriteBatchNode batchNodeWithFile:@"sprites.pvr.ccz"];
+    [self addChild:spritesBgNode];
+    [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"sprites.plist"];
+
     // Background
     CCSprite *background = [CCSprite spriteWithImageNamed:@"background.png"];
-    background.position = ccp(_screenX/2, _screenY/2);
+    background.position = ccp(_windowSize.width*0.5f, _windowSize.height*0.5f);
     background.zOrder = Z_BACKGROUND;
     [self addChild:background];
+    CCLOG(@"Background Size: %f, %f", background.contentSize.width, background.contentSize.height);
+    CCLOG(@"Background Position: %f, %f", background.position.x, background.position.y);
     
     // Physics Layer
     _physicsWorld = [CCPhysicsNode node];
@@ -72,12 +99,25 @@
     _physicsWorld.zOrder = Z_PHYSICS;
     [self addChild:_physicsWorld];
     
-    // Add Boy
-    _boySprite = [CCSprite spriteWithImageNamed:@"boy.png"];
-    _boySprite.position = ccp(_screenX*0.50f, _screenY*0.14f);
+    // Add Boy Sprite
+    _boySprite = [CCSprite spriteWithImageNamed:@"boy_flying1.png"];
+    _boySprite.position = ccp(_windowSize.width*0.50f, _windowSize.height*0.14f);
     _boySprite.physicsBody = [CCPhysicsBody bodyWithRect:(CGRect){CGPointZero, _boySprite.contentSize} cornerRadius:0];
     _boySprite.physicsBody.type = CCPhysicsBodyTypeStatic;
     _boySprite.physicsBody.collisionType = @"boyCollision";
+    
+    // Boy Animation
+    NSMutableArray *boyFrames = [NSMutableArray array];
+    for (int i = 1; i <= 3; i++) {
+    	CCSpriteFrame *frame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:[NSString stringWithFormat:@"boy_flying%d.png",i]];
+        [boyFrames addObject:frame];
+    }
+    [boyFrames addObject:[[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"boy_flying2.png"]];
+    
+    CCAnimation *boyAnimation = [CCAnimation animationWithSpriteFrames:boyFrames delay:0.2f];
+    [_boySprite runAction:[CCActionRepeatForever actionWithAction:[CCActionAnimate actionWithAnimation:boyAnimation]]];
+    
+    
     [_physicsWorld addChild:_boySprite];
     
     // Balloon/String Variables
@@ -91,18 +131,18 @@
      	 *  - End balloons are 4% of screen height lower than middle balloons
      	 *  - Bottom row of balloons are both considered middle balloons
      	 */
-    CGPoint balloonCoords[] = {ccp(_screenX*0.36f, _screenY*0.72f),
-                      		   ccp(_screenX*0.50f, _screenY*0.76f),
-                               ccp(_screenX*0.64f, _screenY*0.72f),
-                               ccp(_screenX*0.29f, _screenY*0.60f),
-                      		   ccp(_screenX*0.43f, _screenY*0.64f),
-                      	   	   ccp(_screenX*0.57f, _screenY*0.64f),
-                      		   ccp(_screenX*0.71f, _screenY*0.60f),
-                      		   ccp(_screenX*0.36f, _screenY*0.50f),
-                               ccp(_screenX*0.50f, _screenY*0.54f),
-                      		   ccp(_screenX*0.64f, _screenY*0.50f),
-                      		   ccp(_screenX*0.43f, _screenY*0.42f),
-                      		   ccp(_screenX*0.57f, _screenY*0.42f)};
+    CGPoint balloonCoords[] = {ccp(_windowSize.width*0.36f, _windowSize.height*0.72f),
+                      		   ccp(_windowSize.width*0.50f, _windowSize.height*0.76f),
+                               ccp(_windowSize.width*0.64f, _windowSize.height*0.72f),
+                               ccp(_windowSize.width*0.29f, _windowSize.height*0.60f),
+                      		   ccp(_windowSize.width*0.43f, _windowSize.height*0.64f),
+                      	   	   ccp(_windowSize.width*0.57f, _windowSize.height*0.64f),
+                      		   ccp(_windowSize.width*0.71f, _windowSize.height*0.60f),
+                      		   ccp(_windowSize.width*0.36f, _windowSize.height*0.50f),
+                               ccp(_windowSize.width*0.50f, _windowSize.height*0.54f),
+                      		   ccp(_windowSize.width*0.64f, _windowSize.height*0.50f),
+                      		   ccp(_windowSize.width*0.43f, _windowSize.height*0.42f),
+                      		   ccp(_windowSize.width*0.57f, _windowSize.height*0.42f)};
     
     CGPoint stringEndPoint = ccp(_boySprite.position.x, _boySprite.position.y + _boySprite.boundingBox.size.height*0.16f);
     
@@ -134,8 +174,10 @@
         [_problems addObject:newProblem];
         
         // Create Answer Label
+        float textScaleFactor = [[CCDirector sharedDirector] contentScaleFactor];
+        
         NSString *answerString = [[NSString alloc] initWithFormat:@"%d", newProblem.solution];
-        CCLabelTTF *newAnswerLabel = [CCLabelTTF labelWithString:answerString fontName:@"Marker Felt" fontSize:42.0f];
+        CCLabelTTF *newAnswerLabel = [CCLabelTTF labelWithString:answerString fontName:@"Marker Felt" fontSize:42.0f / textScaleFactor];
         newAnswerLabel.position = ccp(newBalloon.position.x, newBalloon.position.y + newBalloon.contentSize.height*0.10f);
         newAnswerLabel.color = [CCColor colorWithRed:0.0f green:0.0f blue:0.0f];
         newAnswerLabel.zOrder = 10;
@@ -150,13 +192,25 @@
     }
     
     // Create Top Problem Label
-    _problemLabel = [CCLabelTTF labelWithString:@"" fontName:@"Marker Felt" fontSize:72.0f];
-    _problemLabel.position = ccp(_screenX/2, _screenY*0.92f);
+    _problemLabel = [CCLabelTTF labelWithString:@"" fontName:@"Marker Felt" fontSize:90.0f/_textScaleFactor];
+    _problemLabel.position = ccp(_windowSize.width/2, _windowSize.height*0.92f);
     _problemLabel.color = [CCColor colorWithRed:0.0f green:0.0f blue:0.0f];
-    _problemLabel.zOrder = 10;
+    _problemLabel.zOrder = Z_UI;
     
     [self addChild:_problemLabel];
     [self chooseProblem];
+    
+    // Add Timer Node
+    _timerNode = [[TimerNode alloc] init];
+    _timerNode.position = ccp(_windowSize.width * 0.90f, _windowSize.height * 0.92f);
+    _timerNode.zOrder = Z_UI;
+    [self addChild:_timerNode];
+    
+    // Pause Button
+    _pauseButton = [CCSprite spriteWithImageNamed:@"pause.png"];
+    _pauseButton.position = ccp(_windowSize.width*0.08f, _windowSize.height*0.92f);
+    _pauseButton.zOrder = Z_UI;
+    [self addChild:_pauseButton];
     
     // Set Cloud Spawns
     [self schedule:@selector(addCloud:) interval:4.0f];
@@ -182,14 +236,15 @@
     
     // Choose Random X Spawn Point
     int minX = cloud.contentSize.width / 2;
-    int maxX = _screenX - cloud.contentSize.width / 2;
+    int maxX = _windowSize.width - cloud.contentSize.width / 2;
     int rangeX = maxX - minX;
     int randomX = (arc4random() % rangeX) + minX;
     
     // Set Cloud Properties and Add to Scene
-    cloud.position = CGPointMake(randomX, _screenY + cloud.contentSize.height/2);
+    cloud.position = CGPointMake(randomX, _windowSize.height + cloud.contentSize.height/2);
     cloud.zOrder = Z_CLOUD;
     cloud.name = @"cloud";
+    
     [self addChild:cloud];
     
     // Create Movement Action and Remove Action for Sprite
@@ -205,12 +260,12 @@
 - (void)addBird:(CCTime)dt {
 	CCSprite *bird = [CCSprite spriteWithImageNamed:@"bird1.png"];
     int minY = bird.contentSize.width / 2;
-    int maxY = _screenY - bird.contentSize.width / 2;
+    int maxY = _windowSize.height - bird.contentSize.width / 2;
     int rangeY = maxY - minY;
     int randomY = (arc4random() % rangeY) + minY;
     
     // Set Bird Properties and Add to Scene
-    bird.position = CGPointMake(_screenY + bird.contentSize.height/2, randomY);
+    bird.position = CGPointMake(_windowSize.height + bird.contentSize.height/2, randomY);
     bird.physicsBody = [CCPhysicsBody bodyWithRect:(CGRect){CGPointZero, bird.contentSize} cornerRadius:0];
     bird.physicsBody.collisionType = @"birdCollision";
     [_physicsWorld addChild:bird];
@@ -231,6 +286,14 @@
     // Log touch location
     CCLOG(@"Touch Location: %@",NSStringFromCGPoint(touchLoc));
 
+	// Pause Button
+    if (CGRectContainsPoint(_pauseButton.boundingBox, touchLoc)) {
+    	CCLOG(@"PAUSE");
+        //[[CCDirector sharedDirector] pause];
+        PauseScene *pauseScene = [[PauseScene alloc] init];
+        [[CCDirector sharedDirector] pushScene:pauseScene];
+    }
+	
     // Loop through each balloon and check if the touch was inside of it
     for (int i = 0; i < [_balloons count]; i++) {
     	CCSprite *currentBalloon = [_balloons objectAtIndex:i];
@@ -311,7 +374,13 @@
     [_problemLabel setString:problem.problemString];
 }
 
+/*
+ * End of Game method, stops actions/animations, checks for high score (gives option to start new game/return to menu?)
+ */
 - (void)endOfGame {
+	// Stop timer
+    [_timerNode unscheduleAllSelectors];
+    
 	// Stop clouds and birds from spawning
 	[self unscheduleAllSelectors];
     
@@ -322,7 +391,7 @@
         if (child.isRunningInActiveScene && [child.name isEqualToString:@"cloud"]) {
             [child stopAllActions];
             // Move clouds upward at same speed they were moving downward
-            CCAction *moveCloudUp = [CCActionMoveTo actionWithDuration:16.0f*((_screenY-child.position.y)/_screenY) position:ccp(child.position.x, _screenY + child.contentSize.height/2)];
+            CCAction *moveCloudUp = [CCActionMoveTo actionWithDuration:16.0f*((_windowSize.height-child.position.y)/_windowSize.height) position:ccp(child.position.x, _windowSize.height + child.contentSize.height/2)];
             CCAction *actionRemove = [CCActionRemove action];
             [child runAction:[CCActionSequence actionWithArray:@[moveCloudUp, actionRemove]]];
             
@@ -331,11 +400,11 @@
     
     // Start bringing up the ground/trees
     CCSprite *ground = [CCSprite spriteWithImageNamed:@"ground.png"];
-    ground.position = ccp(_screenX/2, -ground.contentSize.height/2);
+    ground.position = ccp(_windowSize.width/2, -ground.contentSize.height/2);
     ground.zOrder = Z_GROUND;
     [self addChild:ground];
-    float groundMoveSpeed = 32.0f*(_screenY*0.26f/_screenY);
-    CCAction *moveGroundUp = [CCActionMoveTo actionWithDuration:groundMoveSpeed position:ccp(_screenX/2, _screenY*0.26f)];
+    float groundMoveSpeed = 32.0f*(_windowSize.height*0.26f/_windowSize.height);
+    CCAction *moveGroundUp = [CCActionMoveTo actionWithDuration:groundMoveSpeed position:ccp(_windowSize.width/2, _windowSize.height*0.26f)];
 	CCActionCallBlock *stopEverything = [CCActionCallBlock actionWithBlock:^{
         // Stop any clouds that are still on screen
         CCSprite *cloud;
@@ -344,8 +413,36 @@
             [cloud stopAllActions];
         }
         [self stopAllActions];
-        CCLOG(@"Stopping All Actions.");
+        
+        // Stop boy animation and change sprite image
+        [_boySprite stopAllActions];
+        [_boySprite setSpriteFrame:[CCSpriteFrame frameWithImageNamed:@"boy_landed.png"]];
     }];
     [ground runAction:[CCActionSequence actionWithArray:@[moveGroundUp, stopEverything]]];
+    
+    // Check for High Score & Display Post Game UI
+    float highScore = [[[NSUserDefaults standardUserDefaults] objectForKey:@"highscore"] floatValue];
+    float roundScore = [_timerNode getTime];
+    PostGameNode *postGame;
+    if (roundScore < highScore || highScore == 0) {
+        postGame = [[PostGameNode alloc] initWithWin:YES scaleFactor:_textScaleFactor];
+        // Store new highscore
+        [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithFloat:roundScore] forKey:@"highscore"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    } else {
+		postGame = [[PostGameNode alloc] initWithWin:NO scaleFactor:_textScaleFactor];
+    }
+    postGame.position = ccp(_windowSize.width*0.50f, _windowSize.height*0.80f);
+    postGame.zOrder = Z_UI;
+    [self addChild:postGame];
 }
+
+-(void)onResumeClick
+{
+	CCLOG(@"UNPAUSE");
+	[[CCDirector sharedDirector] resume];
+	[self removeChild:_pauseOverlay];
+    [self removeChild:_resumeButton];
+}
+
 @end
