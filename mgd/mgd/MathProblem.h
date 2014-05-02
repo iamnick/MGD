@@ -19,5 +19,8 @@
 @property (nonatomic) int index;
 
 -(id)initAddition;
+-(id)initSubtraction;
+-(id)initMultiplication;
+-(id)initDivision;
 
 @end

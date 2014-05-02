@@ -28,8 +28,6 @@
     _textScaleFactor = [[CCDirector sharedDirector] contentScaleFactor];
 	_elapsedTime = 0.0f;
     
-    // Create "Time" Label
-    
     // Create Actual Timer Label
     _timerLabel = [CCLabelTTF labelWithString:@"0.00" fontName:@"Marker Felt" fontSize:56.0f/_textScaleFactor];
     _timerLabel.color = [CCColor colorWithRed:0.0f green:0.0f blue:0.0f];

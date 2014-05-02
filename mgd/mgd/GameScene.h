@@ -16,5 +16,7 @@
 
 + (GameScene *)scene;
 - (id)init;
+- (void)endOfGame;
+- (void)stopBoy;
 
 @end
