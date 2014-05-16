@@ -39,10 +39,14 @@
     NSString *line1 = @"Pop the balloon that contains the";
     NSString *line2 = @"answer of the problem at the top";
     NSString *line3 = @"of the screen.";
+    NSString *linx1 = @"You have 3 lifelines to help you out:";
+    NSString *linx2 = @"Skip - Skip a tough problem until later.";
+    NSString *linx3 = @"Freeze - Stops the timer until you answer right.";
+    NSString *linx4 = @"50/50 - Narrows your choices down to 2.";
     NSString *line4 = @"The game ends once you have popped";
     NSString *line5 = @"all of the balloons.";
     NSString *line6 = @"Try your best to beat the fastest time!";
-    NSString *instructions = [NSString stringWithFormat:@"%@\n%@\n%@\n\n%@\n%@\n\n%@", line1, line2, line3, line4, line5, line6];
+    NSString *instructions = [NSString stringWithFormat:@"%@\n%@\n%@\n\n%@\n%@\n%@\n%@\n\n%@\n%@\n\n%@", line1, line2, line3, linx1, linx2, linx3, linx4, line4, line5, line6];
     
     CCLabelTTF *instLabel = [CCLabelTTF labelWithString:instructions fontName:@"Arial Narrow" fontSize:fontSize];
     instLabel.color = [CCColor colorWithUIColor:[UIColor blackColor]];

@@ -24,7 +24,6 @@
 	// Nodes that will need to be accessed later
     CCSprite *_boySprite;
     CCLabelTTF *_problemLabel;
-    TimerNode *_timerNode;
     GameEnviroLayer *_enviroLayer;
     GameBoardLayer *_gameBoardLayer;
     
@@ -107,12 +106,6 @@
     _gameBoardLayer.userInteractionEnabled = YES;
     [self addChild:_gameBoardLayer];
     
-    // Add Timer Node
-    _timerNode = [[TimerNode alloc] init];
-    _timerNode.position = ccp(_windowSize.width * 0.90f, _windowSize.height * 0.92f);
-    _timerNode.zOrder = Z_UI;
-    [self addChild:_timerNode];
-    
 	// Set Bird Spawns
     [self schedule:@selector(addBird:) interval:2.0f];
     
@@ -163,32 +156,57 @@
 }
 
 /*
- * End of Game method, stops actions/animations, checks for high score (gives option to start new game/return to menu?)
+ * End of Game method, stops actions/animations, checks for high score
  */
-- (void)endOfGame
+- (void)endOfGameWithTime:(float)timeTaken andIncorrect:(int)incorrect andStreak:(int)streak;
 {
 
 	// Stop time, clouds, and birds from spawning
-    [_timerNode unscheduleAllSelectors];
     [_enviroLayer unscheduleAllSelectors];
 	[self unscheduleAllSelectors];
     
 	// Stop all cloud movement, and start moving them back upwards, also move the ground/trees back up
     [_enviroLayer startLanding];
     
+    // Calculate Score
+    int timeScore = 0;
+    if (timeTaken <= 10.0f) {
+    	timeScore += 1000;
+    } else if (10.0f < timeTaken <= 20.0f) {
+    	timeScore += 800;
+    } else if (20.0f < timeTaken <= 30.0f) {
+    	timeScore += 600;
+    } else if (30.0f < timeTaken <= 40.0f) {
+    	timeScore += 500;
+    } else if (40.0f < timeTaken <= 50.0f) {
+    	timeScore += 400;
+    } else if (50.0f < timeTaken <= 60.0f) {
+    	timeScore += 200;
+    } else {
+    	timeScore += 100;
+    }
+    
+    int streakScore = streak * 100;
+    int incorrectScore = incorrect * -100;
+    
+    // TEMP RESET HIGHSCORE
+    //[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:0] forKey:@"highscore"];
+	//[[NSUserDefaults standardUserDefaults] synchronize];
+    
     // Check for High Score & Display Post Game UI
-    float highScore = [[[NSUserDefaults standardUserDefaults] objectForKey:@"highscore"] floatValue];
-    float roundScore = [_timerNode getTime];
+    int highScore = [[[NSUserDefaults standardUserDefaults] objectForKey:@"highscore"] intValue];
+    int score = timeScore + incorrectScore + streakScore;
+   	NSArray *scoreArray = @[[NSNumber numberWithInt:timeScore], [NSNumber numberWithInt:streakScore], [NSNumber numberWithInt:incorrectScore], [NSNumber numberWithInt:score]];
+    CCLOG(@"%@", [scoreArray description]);
     PostGameNode *postGame;
-    if (roundScore < highScore || highScore == 0) {
-        postGame = [[PostGameNode alloc] initWithWin:YES scaleFactor:_textScaleFactor];
+    if (score > highScore || highScore == 0) {
+        postGame = [[PostGameNode alloc] initWithWin:YES andScores:scoreArray scaleFactor:_textScaleFactor];
         // Store new highscore
-        [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithFloat:roundScore] forKey:@"highscore"];
+        [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:score] forKey:@"highscore"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     } else {
-		postGame = [[PostGameNode alloc] initWithWin:NO scaleFactor:_textScaleFactor];
+		postGame = [[PostGameNode alloc] initWithWin:NO andScores:scoreArray scaleFactor:_textScaleFactor];
     }
-    postGame.position = ccp(_windowSize.width*0.50f, _windowSize.height*0.80f);
     postGame.zOrder = Z_UI;
     [self addChild:postGame];
 }

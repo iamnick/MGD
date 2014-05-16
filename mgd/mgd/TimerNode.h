@@ -14,4 +14,6 @@
 }
 
 - (float)getTime;
+- (void)startTimer;
+
 @end

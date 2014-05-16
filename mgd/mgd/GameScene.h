@@ -16,7 +16,7 @@
 
 + (GameScene *)scene;
 - (id)init;
-- (void)endOfGame;
+- (void)endOfGameWithTime:(float)timeTaken andIncorrect:(int)incorrect andStreak:(int)streak;
 - (void)stopBoy;
 
 @end

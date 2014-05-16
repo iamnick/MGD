@@ -10,16 +10,22 @@
 #import "MathProblem.h"
 #import "GameScene.h"
 #import "PauseScene.h"
+#import "TimerNode.h"
 
 @implementation GameBoardLayer
 {
 	CGSize _windowSize;
     float _problemFontSize, _answerFontSize;
-	NSMutableArray *_balloons, *_strings, *_problems, *_answers;
+	NSMutableArray *_balloons, *_strings, *_problems, *_answers, *_poppedBalloons;
     MathProblem *_currentProblem;
     int _problemsAnswered;
+    int _incorrectAnswers;
     CCLabelTTF *_problemLabel;
     CCSprite *_pauseButton;
+    CCSprite *_freezeLifeline, *_skipLifeline, *_fiftyLifeline;
+    BOOL _freezeActive, _skipActive, _fiftyActive;
+    TimerNode *_timerNode;
+    int _maxStreak, _currentStreak;
 }
 
 - (id)initWithBoyPosition:(CGPoint)boyPos
@@ -37,7 +43,16 @@
     _answers = [[NSMutableArray alloc] init];
     _balloons = [[NSMutableArray alloc] init];
     _strings = [[NSMutableArray alloc] init];
+    _poppedBalloons = [[NSMutableArray alloc] init];
     _problemsAnswered = 0;
+    _incorrectAnswers = 0;
+    _maxStreak = 0;
+    _currentStreak = 0;
+    
+    _skipActive = YES;
+    _freezeActive = YES;
+    _fiftyActive = YES;
+    
     
     // Set Content Size
     self.contentSize = _windowSize;
@@ -90,7 +105,6 @@
         CCDrawNode *newString = [[CCDrawNode alloc] init];
         [newString drawSegmentFrom:stringStartPoint to:stringEndPoint radius:0.8f color:[CCColor colorWithRed:0.0f green:0.0f blue:0.0f]];
         newString.zOrder = self.zOrder - 1;
-        CCLOG(@"string z: %ld", (long)newString.zOrder);
 
         // Create Math Problem
         MathProblem *newProblem;
@@ -137,6 +151,19 @@
         [_strings addObject:newString];
     }
     
+    // Create Lifeline Circles
+    _skipLifeline = [CCSprite spriteWithImageNamed:@"skip.png"];
+    _skipLifeline.position = ccp(_windowSize.width*0.90f, _windowSize.height*0.70f);
+    [self addChild:_skipLifeline];
+    
+    _freezeLifeline = [CCSprite spriteWithImageNamed:@"freeze.png"];
+    _freezeLifeline.position = ccp(_windowSize.width*0.90f, _windowSize.height*0.60f);
+    [self addChild:_freezeLifeline];
+    
+    _fiftyLifeline = [CCSprite spriteWithImageNamed:@"fifty.png"];
+    _fiftyLifeline.position = ccp(_windowSize.width*0.90f, _windowSize.height*0.50f);
+    [self addChild:_fiftyLifeline];
+    
     // Create Top Problem Label
     _problemLabel = [CCLabelTTF labelWithString:@"" fontName:@"Marker Felt" fontSize:_problemFontSize]; // TSF
     _problemLabel.position = ccp(_windowSize.width/2, _windowSize.height*0.92f);
@@ -145,6 +172,13 @@
     
     [self addChild:_problemLabel];
     [self chooseProblem];
+    
+    // Add Timer Node
+    _timerNode = [[TimerNode alloc] init];
+    _timerNode.position = ccp(_windowSize.width * 0.90f, _windowSize.height * 0.92f);
+    _timerNode.zOrder = self.zOrder;
+    [self addChild:_timerNode];
+    [_timerNode startTimer];
     
     // Pause Button
     _pauseButton = [CCSprite spriteWithImageNamed:@"pause.png"];
@@ -188,18 +222,105 @@
                 [self removeChild:[_balloons objectAtIndex:i]];
                 [self removeChild:[_strings objectAtIndex:i]];
                 [self removeChild:[_answers objectAtIndex:i]];
+                [_poppedBalloons addObject:[NSNumber numberWithInt:i]];
+                
+                // Reset opacities of balloons
+                CCSprite *balloonToModify;
+                CCLabelTTF *answerToModify;
+                for (int j = 0; j < [_balloons count]; j++) {
+                	balloonToModify = [_balloons objectAtIndex:j];
+                	balloonToModify.opacity = 1.0f;
+                    answerToModify = [_answers objectAtIndex:j];
+                    answerToModify.opacity = 1.0f;
+                }
+                
+                // Continue Timer
+                [_timerNode startTimer];
+                
+                // Streak
+            	_currentStreak++;
+                if (_currentStreak > _maxStreak) {
+                	_maxStreak = _currentStreak;
+                }
+                
+                // Disable 50/50 and skip if just 1 balloon is left
+                if (_problemsAnswered == 11) {
+                	_fiftyActive = NO;
+                    _skipActive = NO;
+                    _fiftyLifeline.opacity = 0.5f;
+                    _skipLifeline.opacity = 0.5f;
+                }
                 
                 // Check if last balloon was popped
                 if (_problemsAnswered < 12) {
                 	[self chooseProblem];
                 } else {
                 	[_problemLabel setString:@""];
-                    //[self endOfGame];
-                    [(GameScene*)[self parent] endOfGame];
+                    [_timerNode unscheduleAllSelectors];
+                    [(GameScene*)[self parent] endOfGameWithTime:[_timerNode getTime] andIncorrect:_incorrectAnswers andStreak:_maxStreak];
                 }
             } else {
             	CCLOG(@"Incorrect Answer");
+                _incorrectAnswers++;
+                _currentStreak = 0;
                 [[OALSimpleAudio sharedInstance] playEffect:@"wrong_answer.mp3"];
+            }
+        }
+    }
+    
+    // Lifeline Buttons
+    if (ccpDistance(_skipLifeline.position, touchLoc) < _skipLifeline.contentSize.width*0.5f && _skipActive) {
+    	// Skip
+        CCLOG(@"Skip");
+        _skipLifeline.opacity = 0.5f;
+        _skipActive = NO;
+        MathProblem *prevProblem = _currentProblem;
+        while ([prevProblem.problemString isEqualToString:_currentProblem.problemString]) {
+        	[self chooseProblem];
+        }
+        
+    } else if (ccpDistance(_freezeLifeline.position, touchLoc) < _freezeLifeline.contentSize.width*0.5f && _freezeActive) {
+    	// Freeze
+        CCLOG(@"Freeze");
+        _freezeLifeline.opacity = 0.5f;
+        _freezeActive = NO;
+        [_timerNode unscheduleAllSelectors];
+
+    } else if (ccpDistance(_fiftyLifeline.position, touchLoc) < _fiftyLifeline.contentSize.width*0.5f && _fiftyActive) {
+    	// Fifty
+        CCLOG(@"Fifty");
+        _fiftyLifeline.opacity = 0.5f;
+        _fiftyActive = NO;
+        // Find unanswered problems that are incorrect answers
+        NSMutableArray *problemsStillActive = [[NSMutableArray alloc] init];
+        for (int i = 0; i < _problems.count; i++) {
+        	if ([[_problems objectAtIndex:i] answered] == NO && ([[_problems objectAtIndex:i] index] != _currentProblem.index)) {
+            	int index = [[_problems objectAtIndex:i] index];
+            	[problemsStillActive addObject:[NSNumber numberWithInt:index]];
+            }
+        }
+        // problemsStillActive is now an array of unanswered, incorrect problem indexes (but not visible balloon indexes)
+    	
+        // Get the 2 indexes of the answers to show for the 50/50
+        int incorrect = arc4random_uniform((int)[problemsStillActive count]);
+    	int correct = _currentProblem.index;
+        while ([_poppedBalloons containsObject:[NSNumber numberWithInt:correct]]) {
+        	correct = arc4random_uniform((int)[problemsStillActive count]);
+        }
+        while ([_poppedBalloons containsObject:[NSNumber numberWithInt:incorrect]] || correct == incorrect) {
+        	incorrect = arc4random_uniform((int)[problemsStillActive count]);
+        }
+
+        CCLOG(@"incorrect: %d, correct: %d", incorrect, correct);
+        // Fade out all balloons except the correct answer and the random incorrect answer
+        CCSprite *balloonToModify;
+        CCLabelTTF *answerToModify;
+        for (int j = 0; j < _problems.count; j++) {
+			if ([[_problems objectAtIndex:j] index] != incorrect && [[_problems objectAtIndex:j] index] != correct) {
+            	balloonToModify = [_balloons objectAtIndex:j];
+                balloonToModify.opacity = 0.50f;
+                answerToModify = [_answers objectAtIndex:j];
+                answerToModify.opacity = 0.50f;
             }
         }
     }

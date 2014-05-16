@@ -34,7 +34,7 @@
 	[self addChild:_timerLabel];
     
     // Update Timer
-    [self schedule:@selector(updateLabel:) interval:0.01f];
+    //[self schedule:@selector(updateLabel:) interval:0.01f];
     
     // Done
     return self;
@@ -58,4 +58,14 @@
     return time;
 }
 
+- (void)startTimer
+{
+	// Update Timer
+    [self schedule:@selector(updateLabel:) interval:0.01f];
+}
+
+- (void)stopTimer
+{
+
+}
 @end

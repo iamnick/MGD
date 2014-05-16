@@ -13,6 +13,6 @@
     
 }
 
--(id)initWithWin:(BOOL)win scaleFactor:(float)scaleFactor;
+-(id)initWithWin:(BOOL)win andScores:(NSArray*)scores scaleFactor:(float)scaleFactor;
 
 @end
