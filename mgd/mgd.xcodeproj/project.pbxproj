@@ -8,13 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		821BB0D21911BBDF009BB468 /* MainMenuScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 821BB0D11911BBDF009BB468 /* MainMenuScene.m */; };
-		821BB0E51911C64C009BB468 /* MainMenuOptionsLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 821BB0E41911C64C009BB468 /* MainMenuOptionsLayer.m */; };
 		821BB0E81911C93C009BB468 /* GameEnviroLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 821BB0E71911C93C009BB468 /* GameEnviroLayer.m */; };
 		821BB0EE1911DC6E009BB468 /* GameBoardLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 821BB0ED1911DC6E009BB468 /* GameBoardLayer.m */; };
 		821BB0F21912D127009BB468 /* InstructionsScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 821BB0F11912D127009BB468 /* InstructionsScene.m */; };
 		821BB0F61912D157009BB468 /* AboutScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 821BB0F51912D157009BB468 /* AboutScene.m */; };
 		821BB0F91913255D009BB468 /* sprites-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 821BB0F71913255D009BB468 /* sprites-hd.png */; };
 		821BB0FA1913255D009BB468 /* sprites.png in Resources */ = {isa = PBXBuildFile; fileRef = 821BB0F81913255D009BB468 /* sprites.png */; };
+		82A5441C192C563400C3054E /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82A5441B192C563400C3054E /* GameKit.framework */; };
+		82A5441F192E956600C3054E /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82A5441E192E956600C3054E /* Social.framework */; };
 		82D032EB18EDEB8900F84130 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82D032EA18EDEB8900F84130 /* QuartzCore.framework */; };
 		82D032ED18EDEB8900F84130 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82D032EC18EDEB8900F84130 /* OpenGLES.framework */; };
 		82D032EF18EDEB8900F84130 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82D032EE18EDEB8900F84130 /* OpenAL.framework */; };
@@ -246,8 +247,6 @@
 /* Begin PBXFileReference section */
 		821BB0D01911BBDF009BB468 /* MainMenuScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainMenuScene.h; sourceTree = "<group>"; };
 		821BB0D11911BBDF009BB468 /* MainMenuScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainMenuScene.m; sourceTree = "<group>"; };
-		821BB0E31911C64C009BB468 /* MainMenuOptionsLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainMenuOptionsLayer.h; sourceTree = "<group>"; };
-		821BB0E41911C64C009BB468 /* MainMenuOptionsLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainMenuOptionsLayer.m; sourceTree = "<group>"; };
 		821BB0E61911C93C009BB468 /* GameEnviroLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameEnviroLayer.h; sourceTree = "<group>"; };
 		821BB0E71911C93C009BB468 /* GameEnviroLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameEnviroLayer.m; sourceTree = "<group>"; };
 		821BB0EC1911DC6E009BB468 /* GameBoardLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameBoardLayer.h; sourceTree = "<group>"; };
@@ -258,6 +257,8 @@
 		821BB0F51912D157009BB468 /* AboutScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutScene.m; sourceTree = "<group>"; };
 		821BB0F71913255D009BB468 /* sprites-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "sprites-hd.png"; path = "Resources/Images/sprites-hd.png"; sourceTree = "<group>"; };
 		821BB0F81913255D009BB468 /* sprites.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sprites.png; path = Resources/Images/sprites.png; sourceTree = "<group>"; };
+		82A5441B192C563400C3054E /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		82A5441E192E956600C3054E /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		82D032E718EDEB8900F84130 /* mgd.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = mgd.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		82D032EA18EDEB8900F84130 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		82D032EC18EDEB8900F84130 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -707,6 +708,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82A5441F192E956600C3054E /* Social.framework in Frameworks */,
+				82A5441C192C563400C3054E /* GameKit.framework in Frameworks */,
 				82D0330118EDEB8900F84130 /* libObjectiveChipmunk.a in Frameworks */,
 				82D032EF18EDEB8900F84130 /* OpenAL.framework in Frameworks */,
 				82D032F518EDEB8900F84130 /* UIKit.framework in Frameworks */,
@@ -728,8 +731,6 @@
 			children = (
 				821BB0D01911BBDF009BB468 /* MainMenuScene.h */,
 				821BB0D11911BBDF009BB468 /* MainMenuScene.m */,
-				821BB0E31911C64C009BB468 /* MainMenuOptionsLayer.h */,
-				821BB0E41911C64C009BB468 /* MainMenuOptionsLayer.m */,
 			);
 			name = MainMenuScene;
 			sourceTree = "<group>";
@@ -799,6 +800,8 @@
 		82D032E918EDEB8900F84130 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				82A5441E192E956600C3054E /* Social.framework */,
+				82A5441B192C563400C3054E /* GameKit.framework */,
 				82D032EA18EDEB8900F84130 /* QuartzCore.framework */,
 				82D032EC18EDEB8900F84130 /* OpenGLES.framework */,
 				82D032EE18EDEB8900F84130 /* OpenAL.framework */,
@@ -1725,6 +1728,16 @@
 			attributes = {
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Nick Stelzer";
+				TargetAttributes = {
+					82D032E618EDEB8900F84130 = {
+						DevelopmentTeam = 3S983RHJZU;
+						SystemCapabilities = {
+							com.apple.GameCenter = {
+								enabled = 1;
+							};
+						};
+					};
+				};
 			};
 			buildConfigurationList = 82D032E218EDEB8900F84130 /* Build configuration list for PBXProject "mgd" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1837,7 +1850,6 @@
 				82D0346618EDEB8B00F84130 /* OALAction.m in Sources */,
 				82D033FC18EDEB8A00F84130 /* CCTexturePVR.m in Sources */,
 				82D0350B18EDEB8B00F84130 /* CCBAnimationManager.m in Sources */,
-				821BB0E51911C64C009BB468 /* MainMenuOptionsLayer.m in Sources */,
 				82D034EF18EDEB8B00F84130 /* mat4stack.c in Sources */,
 				82D0338E18EDEB8A00F84130 /* CCNode.m in Sources */,
 				82D0337918EDEB8A00F84130 /* CCLabelBMFont.m in Sources */,
@@ -2075,6 +2087,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -2092,6 +2106,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "2E280C5E-6782-415F-9BAC-66902D6F3072";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2102,6 +2117,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "mgd/Supporting Files/Prefix.pch";
@@ -2118,6 +2135,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "2E280C5E-6782-415F-9BAC-66902D6F3072";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;

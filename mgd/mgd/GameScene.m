@@ -58,7 +58,7 @@
     // Initialize Variables
     _textScaleFactor = [[CCDirector sharedDirector] contentScaleFactor];
     _windowSize = [[CCDirector sharedDirector] viewSize];
-
+    
     // Background
     CCSprite *background = [CCSprite spriteWithImageNamed:@"background.png"];
     background.position = ccp(_windowSize.width*0.5f, _windowSize.height*0.5f);
@@ -158,7 +158,7 @@
 /*
  * End of Game method, stops actions/animations, checks for high score
  */
-- (void)endOfGameWithTime:(float)timeTaken andIncorrect:(int)incorrect andStreak:(int)streak;
+- (void)endOfGameWithTime:(float)timeTaken andIncorrect:(int)incorrect andStreak:(int)streak andLifelinesUsed:(BOOL)llUsed;
 {
 
 	// Stop time, clouds, and birds from spawning
@@ -188,25 +188,80 @@
     
     int streakScore = streak * 100;
     int incorrectScore = incorrect * -100;
-    
-    // TEMP RESET HIGHSCORE
-    //[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:0] forKey:@"highscore"];
-	//[[NSUserDefaults standardUserDefaults] synchronize];
+    NSNumber *roundScore = [NSNumber numberWithInt:(timeScore + streakScore + incorrectScore)];
     
     // Check for High Score & Display Post Game UI
-    int highScore = [[[NSUserDefaults standardUserDefaults] objectForKey:@"highscore"] intValue];
-    int score = timeScore + incorrectScore + streakScore;
-   	NSArray *scoreArray = @[[NSNumber numberWithInt:timeScore], [NSNumber numberWithInt:streakScore], [NSNumber numberWithInt:incorrectScore], [NSNumber numberWithInt:score]];
-    CCLOG(@"%@", [scoreArray description]);
-    PostGameNode *postGame;
-    if (score > highScore || highScore == 0) {
-        postGame = [[PostGameNode alloc] initWithWin:YES andScores:scoreArray scaleFactor:_textScaleFactor];
-        // Store new highscore
-        [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:score] forKey:@"highscore"];
+    NSMutableArray *topTen = [[NSMutableArray alloc] initWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"highscores"]];
+    NSMutableArray *topTenNoLL = [[NSMutableArray alloc] initWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"highscores_noll"]];
+    
+	CCLOG(@"RoundScore: %d", [roundScore intValue]);
+    
+    // See if the highscore was among the general list of highscores
+    BOOL scoreAddedtoRegHS = NO;
+    int regHsIndex = -1;
+    if (topTen == nil) {
+    	topTen = [[NSMutableArray alloc] init];
+        [topTen addObject:roundScore];
+        [[NSUserDefaults standardUserDefaults] setObject:topTen forKey:@"highscores"];
         [[NSUserDefaults standardUserDefaults] synchronize];
+        scoreAddedtoRegHS = YES;
+        regHsIndex = 0;
     } else {
-		postGame = [[PostGameNode alloc] initWithWin:NO andScores:scoreArray scaleFactor:_textScaleFactor];
+    	for (int i = 0; i < topTen.count; i++) {
+    		if ([roundScore intValue] > [[topTen objectAtIndex:i] intValue]) {
+                [topTen insertObject:roundScore atIndex:i];
+                [[NSUserDefaults standardUserDefaults] setObject:topTen forKey:@"highscores"];
+        		[[NSUserDefaults standardUserDefaults] synchronize];
+                regHsIndex = i;
+                scoreAddedtoRegHS = YES;
+                if (topTen.count > 10) {
+                	[topTen removeObjectAtIndex:10];
+                }
+                break;
+    		}
+    	}
     }
+    if (topTen.count < 10 && scoreAddedtoRegHS == NO) {
+    	[topTen addObject:roundScore];
+        [[NSUserDefaults standardUserDefaults] setObject:topTen forKey:@"highscores"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        regHsIndex = (int)topTen.count - 1;
+    }
+	
+    int noLLHsIndex = -1;
+    if (llUsed == NO) {
+		BOOL scoreAddedtoNoLLHS = NO;
+    	if (topTenNoLL == nil) {
+        	topTenNoLL = [[NSMutableArray alloc] init];
+        	[topTenNoLL addObject:roundScore];
+        	[[NSUserDefaults standardUserDefaults] setObject:topTenNoLL forKey:@"highscores_noll"];
+        	[[NSUserDefaults standardUserDefaults] synchronize];
+        	scoreAddedtoNoLLHS = YES;
+        	noLLHsIndex = 0;
+    	} else {
+    		for (int i = 0; i < topTenNoLL.count; i++) {
+        		if ([roundScore intValue] > [[topTenNoLL objectAtIndex:i] intValue]) {
+                	[topTenNoLL insertObject:roundScore atIndex:i];
+                	[[NSUserDefaults standardUserDefaults] setObject:topTenNoLL forKey:@"highscores_noll"];
+        			[[NSUserDefaults standardUserDefaults] synchronize];
+                	noLLHsIndex = i;
+                	scoreAddedtoNoLLHS = YES;
+                	if (topTenNoLL.count > 10) {
+                		[topTenNoLL removeObjectAtIndex:10];
+                	}
+                	break;
+            	}
+        	}
+    	}
+    	if (topTenNoLL.count < 10 && scoreAddedtoNoLLHS == NO) {
+    		[topTenNoLL addObject:roundScore];
+        	[[NSUserDefaults standardUserDefaults] setObject:topTenNoLL forKey:@"highscores_noll"];
+        	[[NSUserDefaults standardUserDefaults] synchronize];
+        	noLLHsIndex = (int)topTenNoLL.count - 1;
+    	}
+    }
+
+    PostGameNode *postGame = [[PostGameNode alloc] initWithRoundScore:roundScore andRegHighScores:topTen andNoLLHighScores:topTenNoLL andAllHSIndex:regHsIndex andNoLLIndex:noLLHsIndex scaleFactor:_textScaleFactor];
     postGame.zOrder = Z_UI;
     [self addChild:postGame];
 }

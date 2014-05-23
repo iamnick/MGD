@@ -12,7 +12,6 @@
 
 @implementation AppDelegate
 
-// 
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 	// This is the only app delegate method you need to implement when inheriting from CCAppDelegate.

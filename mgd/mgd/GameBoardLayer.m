@@ -257,7 +257,17 @@
                 } else {
                 	[_problemLabel setString:@""];
                     [_timerNode unscheduleAllSelectors];
-                    [(GameScene*)[self parent] endOfGameWithTime:[_timerNode getTime] andIncorrect:_incorrectAnswers andStreak:_maxStreak];
+                	[self removeChild:_fiftyLifeline];
+                    [self removeChild:_skipLifeline];
+                    [self removeChild:_freezeLifeline];
+
+    				BOOL lifelinesUsed;
+                    if (_skipActive && _freezeActive && _fiftyActive) {
+                    	lifelinesUsed = NO;
+                    } else {
+                    	lifelinesUsed = YES;
+                    }
+                    [(GameScene*)[self parent] endOfGameWithTime:[_timerNode getTime] andIncorrect:_incorrectAnswers andStreak:_maxStreak andLifelinesUsed:lifelinesUsed];
                 }
             } else {
             	CCLOG(@"Incorrect Answer");
@@ -310,7 +320,10 @@
         while ([_poppedBalloons containsObject:[NSNumber numberWithInt:incorrect]] || correct == incorrect) {
         	incorrect = arc4random_uniform((int)[problemsStillActive count]);
         }
-
+		// 50/50 needs to be fixed/adjusted
+        // it freezes with 3 or 4 answers left
+        // with  5 answers, it faded out the correct answer
+        
         CCLOG(@"incorrect: %d, correct: %d", incorrect, correct);
         // Fade out all balloons except the correct answer and the random incorrect answer
         CCSprite *balloonToModify;

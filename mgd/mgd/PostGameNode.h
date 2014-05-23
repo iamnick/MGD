@@ -8,11 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import "cocos2d.h"
+#import <GameKit/GameKit.h>
 
-@interface PostGameNode : CCNode {
+@interface PostGameNode : CCNode <GKGameCenterControllerDelegate> {
     
 }
 
--(id)initWithWin:(BOOL)win andScores:(NSArray*)scores scaleFactor:(float)scaleFactor;
+-(id)initWithRoundScore:(NSNumber*)roundScore andRegHighScores:(NSMutableArray*)regHighScores andNoLLHighScores:(NSMutableArray*)noLLHighScores andAllHSIndex:(int)hsIndex andNoLLIndex:(int)nollIndex scaleFactor:(float)scaleFactor;
 
 @end
