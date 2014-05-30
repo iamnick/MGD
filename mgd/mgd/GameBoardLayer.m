@@ -11,6 +11,7 @@
 #import "GameScene.h"
 #import "PauseScene.h"
 #import "TimerNode.h"
+#import "Achievements.h"
 
 @implementation GameBoardLayer
 {
@@ -26,6 +27,7 @@
     BOOL _freezeActive, _skipActive, _fiftyActive;
     TimerNode *_timerNode;
     int _maxStreak, _currentStreak;
+    Achievements *_achieveTracker;
 }
 
 - (id)initWithBoyPosition:(CGPoint)boyPos
@@ -53,6 +55,7 @@
     _freezeActive = YES;
     _fiftyActive = YES;
     
+    _achieveTracker = [[Achievements alloc] init];
     
     // Set Content Size
     self.contentSize = _windowSize;
@@ -243,10 +246,12 @@
                 	_maxStreak = _currentStreak;
                 }
                 
+                if (_currentStreak >= 10) {
+                	[_achieveTracker updateTenCorrectStreakAchievement];
+                }
+                
                 // Disable 50/50 and skip if just 1 balloon is left
                 if (_problemsAnswered == 11) {
-                	_fiftyActive = NO;
-                    _skipActive = NO;
                     _fiftyLifeline.opacity = 0.5f;
                     _skipLifeline.opacity = 0.5f;
                 }
@@ -264,6 +269,8 @@
     				BOOL lifelinesUsed;
                     if (_skipActive && _freezeActive && _fiftyActive) {
                     	lifelinesUsed = NO;
+                        [_achieveTracker updateNoLifelinesAchievement];
+                        CCLOG(@"no lifelines used");
                     } else {
                     	lifelinesUsed = YES;
                     }
@@ -272,14 +279,22 @@
             } else {
             	CCLOG(@"Incorrect Answer");
                 _incorrectAnswers++;
-                _currentStreak = 0;
+                if (_currentStreak > 0) {
+                	_currentStreak = 0;
+                } else {
+                	_currentStreak--;
+                }
+                CCLOG(@"currentStreak: %d", _currentStreak);
+                if (_currentStreak == -3) {
+                	[_achieveTracker updateThreeIncorrectStreakAchievement];
+                }
                 [[OALSimpleAudio sharedInstance] playEffect:@"wrong_answer.mp3"];
             }
         }
     }
     
     // Lifeline Buttons
-    if (ccpDistance(_skipLifeline.position, touchLoc) < _skipLifeline.contentSize.width*0.5f && _skipActive) {
+    if (ccpDistance(_skipLifeline.position, touchLoc) < _skipLifeline.contentSize.width*0.5f && _problemsAnswered < 11) {
     	// Skip
         CCLOG(@"Skip");
         _skipLifeline.opacity = 0.5f;
@@ -296,7 +311,7 @@
         _freezeActive = NO;
         [_timerNode unscheduleAllSelectors];
 
-    } else if (ccpDistance(_fiftyLifeline.position, touchLoc) < _fiftyLifeline.contentSize.width*0.5f && _fiftyActive) {
+    } else if (ccpDistance(_fiftyLifeline.position, touchLoc) < _fiftyLifeline.contentSize.width*0.5f && _problemsAnswered < 11) {
     	// Fifty
         CCLOG(@"Fifty");
         _fiftyLifeline.opacity = 0.5f;

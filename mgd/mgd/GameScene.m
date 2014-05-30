@@ -14,6 +14,7 @@
 #import "PauseScene.h"
 #import "GameEnviroLayer.h"
 #import "GameBoardLayer.h"
+#import "Achievements.h"
 
 @implementation GameScene
 {
@@ -31,6 +32,9 @@
     
     // Physics World
     CCPhysicsNode *_physicsWorld;
+    
+    // Achievements Tracker
+    Achievements *_achieveTracker;
     
     // zOrder Constants
     #define Z_BACKGROUND 0
@@ -64,6 +68,9 @@
     background.position = ccp(_windowSize.width*0.5f, _windowSize.height*0.5f);
     background.zOrder = Z_BACKGROUND;
     [self addChild:background];
+    
+    // Achievements
+   	_achieveTracker = [[Achievements alloc] init];
     
     // Enviroment Layer
     _enviroLayer = [[GameEnviroLayer alloc] init];
@@ -260,7 +267,18 @@
         	noLLHsIndex = (int)topTenNoLL.count - 1;
     	}
     }
-
+	
+    // Total Game Counter
+    NSNumber *totalGames = [[NSUserDefaults standardUserDefaults] objectForKey:@"total_games"];
+    if (totalGames == nil) {
+    	totalGames = [NSNumber numberWithInt:0];
+    }
+    CCLOG(@"TOTAL GAMES: %d", [totalGames intValue]);
+    totalGames = [NSNumber numberWithInt:[totalGames intValue] + 1];
+    [[NSUserDefaults standardUserDefaults] setObject:totalGames forKey:@"total_games"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+	[_achieveTracker updateTotalGamesAchievement:[totalGames intValue]];
+    
     PostGameNode *postGame = [[PostGameNode alloc] initWithRoundScore:roundScore andRegHighScores:topTen andNoLLHighScores:topTenNoLL andAllHSIndex:regHsIndex andNoLLIndex:noLLHsIndex scaleFactor:_textScaleFactor];
     postGame.zOrder = Z_UI;
     [self addChild:postGame];

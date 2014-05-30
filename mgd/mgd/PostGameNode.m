@@ -10,6 +10,7 @@
 #import "cocos2d-ui.h"
 #import <GameKit/GameKit.h>
 #import <Social/Social.h>
+#import "Achievements.h"
 
 @implementation PostGameNode
 {
@@ -19,13 +20,17 @@
     NSMutableString *_regHighScoreTable, *_noLLHighScoreTable;
     BOOL _showingAllHighScores;
     CCButton *_swapTableButton;
+    Achievements *_achieveTracker;
 }
 -(id)initWithRoundScore:(NSNumber*)roundScore andRegHighScores:(NSMutableArray*)regHighScores andNoLLHighScores:(NSMutableArray*)noLLHighScores andAllHSIndex:(int)hsIndex andNoLLIndex:(int)nollIndex scaleFactor:(float)scaleFactor
 {
     // Apple recommend assigning self with supers return value
     self = [super init];
     if (!self) return(nil);
-        
+    
+    // Achievements
+    _achieveTracker = [[Achievements alloc] init];
+    
     // Screen/Font Size
     CGSize windowSize = [[CCDirector sharedDirector] viewSize];
     
@@ -77,7 +82,7 @@
     [self addChild:_swapTableButton];
     
 	// GameCenter Highscores button (also report score if GC user is authenticated)
-    CCButton *viewGCButton = [CCButton buttonWithTitle:@"[ View Game Center Highscores ]" fontName:@"Arial Narrow" fontSize:24.0/scaleFactor];
+    CCButton *viewGCButton = [CCButton buttonWithTitle:@"[ View Game Center ]" fontName:@"Arial Narrow" fontSize:24.0/scaleFactor];
     viewGCButton.color = [CCColor colorWithUIColor:[UIColor blackColor]];
     viewGCButton.position = ccp(windowSize.width*0.5f, windowSize.height*0.32f);
     [viewGCButton setTarget:self selector:@selector(onViewGCClick)];

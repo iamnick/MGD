@@ -232,6 +232,7 @@
 		82D5A35718FF549000B239FF /* background-hd.pvr.ccz in Resources */ = {isa = PBXBuildFile; fileRef = 82D5A35318FF549000B239FF /* background-hd.pvr.ccz */; };
 		82D5A35818FF549000B239FF /* background.plist in Resources */ = {isa = PBXBuildFile; fileRef = 82D5A35418FF549000B239FF /* background.plist */; };
 		82D5A35918FF549000B239FF /* background.pvr.ccz in Resources */ = {isa = PBXBuildFile; fileRef = 82D5A35518FF549000B239FF /* background.pvr.ccz */; };
+		82EA5D5719385D250071C7FA /* Achievements.m in Sources */ = {isa = PBXBuildFile; fileRef = 82EA5D5619385D250071C7FA /* Achievements.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -701,6 +702,8 @@
 		82D5A35318FF549000B239FF /* background-hd.pvr.ccz */ = {isa = PBXFileReference; lastKnownFileType = file; name = "background-hd.pvr.ccz"; path = "Resources/Images/background-hd.pvr.ccz"; sourceTree = "<group>"; };
 		82D5A35418FF549000B239FF /* background.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = background.plist; path = Resources/Images/background.plist; sourceTree = "<group>"; };
 		82D5A35518FF549000B239FF /* background.pvr.ccz */ = {isa = PBXFileReference; lastKnownFileType = file; name = background.pvr.ccz; path = Resources/Images/background.pvr.ccz; sourceTree = "<group>"; };
+		82EA5D5519385D250071C7FA /* Achievements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Achievements.h; path = Classes/Achievements.h; sourceTree = "<group>"; };
+		82EA5D5619385D250071C7FA /* Achievements.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Achievements.m; path = Classes/Achievements.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1651,6 +1654,8 @@
 				82D0359318EDEB8C00F84130 /* AppDelegate.m */,
 				82D035CD18F71D1A00F84130 /* MathProblem.h */,
 				82D035CE18F71D1A00F84130 /* MathProblem.m */,
+				82EA5D5519385D250071C7FA /* Achievements.h */,
+				82EA5D5619385D250071C7FA /* Achievements.m */,
 				821BB0F31912D148009BB468 /* AboutScene */,
 				821BB0D91911C186009BB468 /* GameScene */,
 				821BB0EF1912D105009BB468 /* InstructionsScene */,
@@ -1844,6 +1849,7 @@
 				82D034CE18EDEB8B00F84130 /* CCSlider.m in Sources */,
 				82D5A34E18FF0D4B00B239FF /* PostGameNode.m in Sources */,
 				82D0340918EDEB8A00F84130 /* CCTMXXMLParser.m in Sources */,
+				82EA5D5719385D250071C7FA /* Achievements.m in Sources */,
 				82D0344918EDEB8B00F84130 /* CGPointExtension.m in Sources */,
 				82D034D418EDEB8B00F84130 /* CCTextField.m in Sources */,
 				82D0343F18EDEB8B00F84130 /* CCProfiling.m in Sources */,
